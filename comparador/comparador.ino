@@ -1,4 +1,5 @@
 int diente_de_sierra = 11;
+int PWM = 12;
 int frecuencia = 6;
 
 float sawtooth(){
@@ -8,9 +9,17 @@ float sawtooth(){
 
 void setup() {
  Serial.begin(112500);
+ pinMode(diente_de_sierra, OUTPUT);
+ pinMode(PWM, INPUT);
 }
 
 void loop() {
-  float a = sawtooth();
-  Serial.println(a);
+  float st = sawtooth();
+  float in = digitalRead(PWM);
+  
+  analogWrite(diente_de_sierra, st);
+ 
+  Serial.print(st);
+  Serial.print(" ");
+  Serial.println(in);
 }
