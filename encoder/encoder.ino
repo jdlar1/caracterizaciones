@@ -1,55 +1,48 @@
 int outA = 13;
 int outB = 12;
-int outZ = 11;
-int pos = 0;
+int outC = 11;
 int A_last = 0;
-int vuelta = 0;
-int pulsos[15];
+int pulsos = 0;
+int index = 0;
+int arr[6];
+
+float tiempo_prom(int arr[]) {
+  int t1 = arr[1] - arr[0];
+  int t2 = arr[2] - arr[1];
+  int t3 = arr[3] - arr[2];
+  int t4 = arr[4] - arr[3];
+  int t5 = arr[5] - arr[4];
+
+  float ans = (t1 + t2 + t3 + t4 + t5) / 5;
+
+  return ans;
+}
 
 void setup() {
-  pinMode(outA, INPUT);
-  pinMode(outB, INPUT);
-  pinMode(outZ, INPUT);
-  Serial.begin(115200);
-  int A_last = digitalRead(outA);
+  Serial.begin(112500);
+  A_last = digitalRead(outA);
 }
 
 void loop() {
   int A = digitalRead(outA);
   int B = digitalRead(outB);
-  int Z = digitalRead(outZ);
 
-  if (Z == 0){
-    delay(1000);
-    while (Z != 0){
-      if (A != A_last){
-        if (A == B){
-          pos++;
+  if (A != A_last) {
+    if (A == B) {
+      pulsos++;
+      if (pulsos >= 2000) {
+        arr[index] = millis();
+        pulsos = 0;
+        index++;
+        if (index == 7){
+        Serial.println(tiempo_prom(arr));
+          delay(5000);
         }
       }
+      A_last = A;
     }
-    pulsos[vuelta] = pos;
-    vuelta++;
-    pos = 0;
-    delay(200);
-    Serial.println("vuelta");
-  }
-
-  if (vuelta == 14){
-    float prom = average_array(pulsos);
-    Serial.println(prom);
-    for(int i = 0; i < 15; i++){
-      Serial.print(pulsos[i]);
-      Serial.print(" ");
+    else {
+      Serial.println("Giro en sentido opuesto al contador ...");
     }
-    delay(10000);
   }
-}
-
-float average_array(int narray[]){
-  long sum = 0 ;  // sum will be larger than an item, long for safety.
-  for (int i = 0 ; i < 15 ; i++){
-    sum += narray[i];
-  return  sum / 15 ;  // average will be fractional, so float may be appropriate.
-}
 }
