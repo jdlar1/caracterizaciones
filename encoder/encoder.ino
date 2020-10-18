@@ -19,7 +19,7 @@ float tiempo_prom(int arr[]) {
 }
 
 void setup() {
-  Serial.begin(112500);
+  Serial.begin(115200);
   A_last = digitalRead(outA);
 }
 
@@ -37,6 +37,7 @@ void loop() {
         if (index == 7){
         Serial.println(tiempo_prom(arr));
           delay(5000);
+          index= 0;
         }
       }
       A_last = A;
