@@ -35,6 +35,10 @@ void loop() {
      if((Z == HIGH) and (A == HIGH)){
       arr[index] = pulsos;
       index++;
+      Serial.print("Vuelta ");
+      Serial.print(index);
+      Serial.print(", número de pulsos: ");
+      Serial.println(pulsos);
       pulsos = 0;
       if(index == 6){
         Serial.print("El promedio de pulsos por 6 vueltas son: ");
