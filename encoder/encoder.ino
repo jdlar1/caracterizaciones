@@ -1,12 +1,12 @@
 int outA = 13;
 int outB = 12;
-int outC = 11;
+int outZ = 11;
 int A_last = 0;
 int pulsos = 0;
 int index = 0;
 int arr[6];
 
-float tiempo_prom(int arr[]) {
+float pulsos_prom(int arr[]) {
   int t1 = arr[1] - arr[0];
   int t2 = arr[2] - arr[1];
   int t3 = arr[3] - arr[2];
@@ -26,23 +26,25 @@ void setup() {
 void loop() {
   int A = digitalRead(outA);
   int B = digitalRead(outB);
+  int Z = digitalRead(outZ);
 
   if (A != A_last) {
     if (A == B) {
       pulsos++;
-      if (pulsos >= 2000) {
-        arr[index] = millis();
-        pulsos = 0;
-        index++;
-        if (index == 7){
-        Serial.println(tiempo_prom(arr));
-          delay(5000);
-        }
-      }
       A_last = A;
+     if((Z == HIGH) and (A == HIGH)){
+      arr[index] = pulsos;
+      index++;
+      pulsos = 0;
+      if(index == 6){
+        Serial.print("El promedio de pulsos por 6 vueltas son: ");
+        Serial.println(pulsos_prom(arr));
+        index = 0;
+      }
+     }  
     }
     else {
-      Serial.println("Giro en sentido opuesto al contador ...");
+      Serial.println("Giro en sentido opuesto al contador...");
     }
   }
 }
