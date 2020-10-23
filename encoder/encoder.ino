@@ -3,23 +3,9 @@ int outB = 12;
 int outZ = 11;
 int A_last = 0;
 int pulsos = 0;
-int index = 0;
-int arr[6];
-
-float pulsos_prom(int arr[]) {
-  int t1 = arr[1] - arr[0];
-  int t2 = arr[2] - arr[1];
-  int t3 = arr[3] - arr[2];
-  int t4 = arr[4] - arr[3];
-  int t5 = arr[5] - arr[4];
-
-  float ans = (t1 + t2 + t3 + t4 + t5) / 5;
-
-  return ans;
-}
 
 void setup() {
-  Serial.begin(112500);
+  Serial.begin(230400);
   A_last = digitalRead(outA);
 }
 
@@ -30,25 +16,20 @@ void loop() {
 
   if (A != A_last) {
     if (A == B) {
-      pulsos++;
-      A_last = A;
-     if((Z == HIGH) and (A == HIGH)){
-      arr[index] = pulsos;
-      index++;
-      Serial.print("Vuelta ");
-      Serial.print(index);
-      Serial.print(", número de pulsos: ");
-      Serial.println(pulsos);
-      pulsos = 0;
-      if(index == 6){
-        Serial.print("El promedio de pulsos por 6 vueltas son: ");
-        Serial.println(pulsos_prom(arr));
-        index = 0;
+      if (A == HIGH) {
+        pulsos++;
+        if ((Z == LOW) and (pulsos > 0)) {
+          Serial.print("Pulsos última vuelta: ");
+          Serial.println(pulsos);
+          pulsos = 0;
+        }
       }
-     }  
+      else {
+        if (A == HIGH) {
+          pulsos--;
+        }
+      }
     }
-    else {
-      Serial.println("Giro en sentido opuesto al contador...");
-    }
+    A_last = A;
   }
 }
